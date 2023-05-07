@@ -68,35 +68,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.21.0</version>
-                <configuration>
-                    <images>
-                        <image>
-                            <name>${docker.image.prefix}/${project.artifactId}</name>
-                            <build>
-                                <from>openjdk:latest</from>
-                                <assembly>
-                                    <basedir>/app</basedir>
-                                    <descriptorRef>artifact</descriptorRef>
-                                    <inline>
-                                        <id>assembly</id>
-                                        <files>
-                                            <file>
-                                                <source>target/${project.build.finalName}.jar</source>
-                                            </file>
-                                        </files>
-                                    </inline>
-                                </assembly>
-                                <dockerFile>Dockerfile</dockerFile>
-                            </build>
-                            <alias>${project.build.finalName}</alias>
-                        </image>
-                    </images>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
