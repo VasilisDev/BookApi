@@ -15,6 +15,7 @@ public class GutendexClientHttpErrorException extends RuntimeException {
     private final ObjectMapper objectMapper;
     private final int statusCode;
 
+
     public GutendexClientHttpErrorException(HttpStatusCodeException clientErrorException) {
         super(clientErrorException);
         this.responseBody = clientErrorException.getResponseBodyAsString();
