@@ -35,7 +35,7 @@ public class BookController {
     }
 
     @GetMapping("/top-rated")
-    public ResponseEntity<List<BookDto>> getTopRatedBooks(@RequestParam Integer limit) {
+    public ResponseEntity<List<BookDto>> getTopRatedBooks(@Positive(message = "${positive.limit.message}") @RequestParam Integer limit) {
         return ResponseEntity.ok(bookService.getTopRatedBooks(limit));
     }
 
