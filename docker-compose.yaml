@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mysql:
+    hostname: mysql
+    image: mysql:5.7.21
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=book_rating
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    command: --init-file /docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 3306:3306
+    restart: on-failure
+    networks:
+      - book-app-network
+
+  book:
+    hostname: book-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    networks:
+      - book-app-network
+
+networks:
+  book-app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
