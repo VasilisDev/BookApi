@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    hostname: mysql
+    container_name: mysql
     image: mysql:5.7.21
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -19,7 +19,8 @@ services:
       - book-app-network
 
   book:
-    hostname: book-app
+    container_name: book-service
+    image: 12345bill/book:v1.0.0
     build:
       context: .
       dockerfile: Dockerfile
