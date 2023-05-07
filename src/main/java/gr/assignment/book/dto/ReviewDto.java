@@ -9,13 +9,13 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ReviewDto {
-    @NotNull(message = "${review.message.bookId}")
+    @NotNull(message = "{review.message.bookId}")
     private Long bookId;
 
-    @Min(value = 0, message = "${review.message.rating.min}")
-    @Max(value = 5, message = "${review.message.rating.max}")
+    @Min(value = 0, message = "{review.message.rating.min}")
+    @Max(value = 5, message = "{review.message.rating.max}")
     private Integer rating;
 
-    @NotBlank(message = "${review.message.reviewText}")
+    @NotBlank(message = "{review.message.reviewText}")
     private String reviewText;
 }
