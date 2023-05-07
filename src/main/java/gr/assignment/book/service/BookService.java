@@ -76,12 +76,20 @@ public class BookService {
                 .collect(Collectors.toList());
 
         List<BookDto> topRatedBooks = new ArrayList<>();
+        List<BookDto> allBooks = getAll();
         for (Map.Entry<Long, Double> entry : sortedEntries) {
-            BookDto book = this.getBookDetails(entry.getKey());
-            topRatedBooks.add(book);
+            allBooks.stream()
+                    .filter(book -> entry.getKey().equals(book.getId()))
+                    .findFirst()
+                    .ifPresent(topRatedBooks::add);
         }
 
         return topRatedBooks;
+    }
+
+    @Cacheable(value = "${cache.books.name}")
+    public List<BookDto> getAll() {
+        return gutendexClient.getAll();
     }
 
     public MonthlyBookAverageRatingDto getMonthlyRatingAverageBooksById(Long bookId) {

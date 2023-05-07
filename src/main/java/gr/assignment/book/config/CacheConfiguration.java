@@ -23,4 +23,9 @@ public class CacheConfiguration {
     public void evictBookDetails() {
     }
 
+    @CacheEvict(cacheNames = "${cache.book.all.name}", allEntries = true)
+    @Scheduled(fixedRateString = "${cache.book.all.ttl}")
+    public void evictAllBooks() {
+    }
+
 }

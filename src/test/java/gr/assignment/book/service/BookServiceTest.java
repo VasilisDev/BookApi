@@ -85,8 +85,7 @@ class BookServiceTest {
         BookDto book3 = createBookDto(3L);
         BookDto book4 = createBookDto(4L);
 
-        when(gutendexClient.getBookById(eq(1L))).thenReturn(book1);
-        when(gutendexClient.getBookById(eq(4L))).thenReturn(book4);
+        when(gutendexClient.getAll()).thenReturn(List.of(book1, book3, book4));
 
         List<BookDto> topRatedBooks = bookService.getTopRatedBooks(limit);
 
@@ -94,7 +93,6 @@ class BookServiceTest {
         assertEquals(book4, topRatedBooks.get(0));
         assertEquals(book1, topRatedBooks.get(1));
     }
-
 
     @Test
     void getMonthlyRatingAverageBooksById_ReturnsMonthlyBookAverageRatingDto() {
@@ -106,8 +104,6 @@ class BookServiceTest {
         );
 
         when(reviewService.getMonthlyRatingAverageByBookId(eq(bookId))).thenReturn(projections);
-
-        MonthlyBookAverageRatingDto expectedDto = createMonthlyBookAverageRatingDto(bookId, projections);
 
         MonthlyBookAverageRatingDto actualDto = bookService.getMonthlyRatingAverageBooksById(bookId);
 
@@ -161,22 +157,4 @@ class BookServiceTest {
         return projection;
     }
 
-    private MonthlyBookAverageRatingDto createMonthlyBookAverageRatingDto(Long bookId, List<MonthlyBookAverageRatingProjection> projections) {
-        MonthlyBookAverageRatingDto dto = new MonthlyBookAverageRatingDto();
-        dto.setBookId(bookId);
-        dto.setYearlyMonthlyAverageRatings(new ArrayList<>());
-        MonthlyBookAverageRatingDto.yearlyMonthlyAverageRating yearlyMonthlyAverageRating = new MonthlyBookAverageRatingDto.yearlyMonthlyAverageRating();
-        yearlyMonthlyAverageRating.setYear(projections.get(0).getYear());
-        yearlyMonthlyAverageRating.setMonthlyAverageRatings(new ArrayList<>());
-        dto.getYearlyMonthlyAverageRatings().add(yearlyMonthlyAverageRating);
-
-        for (MonthlyBookAverageRatingProjection projection : projections) {
-            MonthlyBookAverageRatingDto.MonthlyAverageRating monthlyAverageRating = new MonthlyBookAverageRatingDto.MonthlyAverageRating();
-            monthlyAverageRating.setMonth(projection.getMonth());
-            monthlyAverageRating.setAverageRating(projection.getAverageRating());
-            yearlyMonthlyAverageRating.getMonthlyAverageRatings().add(monthlyAverageRating);
-        }
-
-        return dto;
-    }
 }

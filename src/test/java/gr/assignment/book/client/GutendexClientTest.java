@@ -17,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,7 +123,7 @@ class GutendexClientTest {
         when(restTemplate.getForEntity(anyString(), any(), anyLong()))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
-         assertThrows(GutendexClientHttpErrorException.class,
+        assertThrows(GutendexClientHttpErrorException.class,
                 () -> gutendexClient.getBookById(bookId));
 
         verify(restTemplate, times(1)).getForEntity(anyString(), any(), anyLong());
@@ -142,6 +143,87 @@ class GutendexClientTest {
 
         // then
         verify(restTemplate, times(1)).getForEntity(anyString(), any(), anyLong());
+    }
+
+    @Test
+    void getAll_ShouldReturnListOfBooks() {
+        List<BookDto> expectedBooks = new ArrayList<>();
+        BookDto bookDto1 = new BookDto();
+        bookDto1.setId(1L);
+        bookDto1.setTitle("Book 1");
+        BookDto bookDto2 = new BookDto();
+        bookDto2.setId(1L);
+        bookDto2.setTitle("Book 2");
+        expectedBooks.add(bookDto1);
+        expectedBooks.add(bookDto1);
+
+        BookListDto bookListDto = new BookListDto();
+        bookListDto.setResults(expectedBooks);
+
+        when(restTemplate.getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        )).thenReturn(new ResponseEntity<>(bookListDto, HttpStatus.OK));
+
+        List<BookDto> actualBooks = gutendexClient.getAll();
+
+        assertNotNull(actualBooks);
+        assertEquals(expectedBooks.size(), actualBooks.size());
+        assertEquals(expectedBooks.get(0).getId(), actualBooks.get(0).getId());
+        assertEquals(expectedBooks.get(0).getTitle(), actualBooks.get(0).getTitle());
+        assertEquals(expectedBooks.get(1).getId(), actualBooks.get(1).getId());
+        assertEquals(expectedBooks.get(1).getTitle(), actualBooks.get(1).getTitle());
+
+        verify(restTemplate, times(1)).getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        );
+    }
+
+    @Test
+    void testGetAll_ClientErrorException() {
+        when(restTemplate.getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+
+        assertThrows(GutendexClientHttpErrorException.class, () -> gutendexClient.getAll());
+
+        verify(restTemplate, times(1)).getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        );
+    }
+
+    @Test
+    void testGetAll_HttpStatusCodeException() {
+        when(restTemplate.getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        )).thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+
+        assertThrows(GutendexClientHttpErrorException.class, () -> gutendexClient.getAll());
+
+        verify(restTemplate, times(1)).getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        );
+    }
+
+    @Test
+    void testGetAll_RestClientException() {
+        RestClientException exception = new RestClientException("Rest Client Exception");
+        when(restTemplate.getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        )).thenThrow(exception);
+
+        assertThrows(GutendexClientException.class, () -> gutendexClient.getAll());
+
+        verify(restTemplate, times(1)).getForEntity(
+                anyString(),
+                eq(BookListDto.class)
+        );
     }
 
 }

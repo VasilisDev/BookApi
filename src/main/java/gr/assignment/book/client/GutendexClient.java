@@ -7,6 +7,8 @@ import gr.assignment.book.exception.GutendexClientHttpErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -58,6 +60,28 @@ public class GutendexClient {
             throw new GutendexClientHttpErrorException(e);
         } catch (HttpStatusCodeException e) {
             log.error("Status code occurred while searching book with title: \"{}\" ", title, e);
+            throw new GutendexClientHttpErrorException(e);
+        } catch (RestClientException e) {
+            throw new GutendexClientException(e);
+        }
+    }
+
+    public List<BookDto> getAll() {
+        String finalUrl = apiUrl + BOOKS_PATH;
+        try {
+            ResponseEntity<BookListDto> response = restTemplate.getForEntity(finalUrl, BookListDto.class);
+            BookListDto bookListDto = response.getBody();
+
+            if (bookListDto != null && bookListDto.getResults() != null) {
+                return bookListDto.getResults();
+            } else {
+                return Collections.emptyList(); // Return an empty list if the response is null or the results are null
+            }
+        } catch (HttpClientErrorException e) {
+            log.error("Client error received while retrieving all books", e);
+            throw new GutendexClientHttpErrorException(e);
+        } catch (HttpStatusCodeException e) {
+            log.error("Status code error occurred while retrieve all books", e);
             throw new GutendexClientHttpErrorException(e);
         } catch (RestClientException e) {
             throw new GutendexClientException(e);
