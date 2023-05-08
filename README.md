@@ -45,11 +45,12 @@ To get started with the Book Application, follow the steps below:
 
     Once the containers are up and running, you can now access the Book search app by opening a web browser and entering the appropriate URL. The exact URL will depend on your Docker setup and configuration. Typically, you can access the application using http://localhost:8080.
     
-5. **Books API usages**
+5. **Book Management API usages**
 
     Endpoints related to book management.
 
     - Search Books
+    
          Endpoint: GET /api/books/search
     
          Searches for books based on the provided title.
@@ -57,7 +58,7 @@ To get started with the Book Application, follow the steps below:
          Parameters:
     
         - title (required): The title of the book to search for.
-        - page (optional): The page number for pagination. Should be a positive number
+        - page (optional): The page number for pagination. Should be a positive number.
         - pageSize (optional): The number of books per page.
         
         Example Request:    
@@ -67,23 +68,24 @@ To get started with the Book Application, follow the steps below:
        
         Example Response: 
         ```http
-         {
-            "id": 1,
-            "title": "Harry Potter and the Sorcerer's Stone",
-            "author": "J.K. Rowling",
-            "rating": 4.5
-          },
-          {
-            "id": 2,
-            "title": "Harry Potter and the Chamber of Secrets",
-            "author": "J.K. Rowling",
-            "rating": 4.6
-          },
-          [...]
-        ]
+        [
+           {
+             "id": 1,
+             "title": "Harry Potter and the Sorcerer's Stone",
+             "author": "J.K. Rowling",
+             "rating": 4.5
+           },
+           {
+             "id": 2,
+             "title": "Harry Potter and the Chamber of Secrets",
+             "author": "J.K. Rowling",
+             "rating": 4.6
+           }
+       ]
        ```
       
    - Get Book Details
+   
        Endpoint: GET /api/books/{bookId}
        
        Retrieves the details of a specific book.
@@ -93,50 +95,66 @@ To get started with the Book Application, follow the steps below:
        bookId (required): The ID of the book to retrieve.
        Example Request:
        ```http 
-       GET /api/books/1
+       GET /api/books/4
        ``` 
      
        Example Response:   
        ```http 
        {
-         "id": 1,
-         "title": "Harry Potter and the Sorcerer's Stone",
-         "author": "J.K. Rowling",
-         "rating": 4.5,
-         "description": "The first book in the Harry Potter series."
+           "id": 4,
+           "title": "Lincoln's Gettysburg Address: Given November 19, 1863 on the battlefield near Gettysburg, Pennsylvania, USA",
+           "authors": [
+               {
+                   "name": "Lincoln, Abraham"
+               }
+           ],
+           "rating": 2.5,
+           "reviews": [
+               "hello review",
+               "hello review 4",
+               "hello review 5",
+               "hello review 1"
+           ]
        }
        ```
    
    - Get Top Rated Books
+   
        Endpoint: GET /api/books/top-rated
            
        Retrieves a list of top-rated books.
           
        Parameters:
            
-       limit (required): The maximum number of books to retrieve. Should be a positive number
+       limit (required): The maximum number of books to retrieve. Should be a positive number.
+       
        Example Request:
        ```http
-        GET /api/books/top-rated?limit=5
+       GET /api/books/top-rated?limit=5
        ```
            
        Example Response:
        ```http    
-           [
+       [
+         {
+           "id": 100,
+           "title": "The Complete Works of William Shakespeare",
+           "authors": [
              {
-               "id": 1,
-               "title": "Harry Potter and the Sorcerer's Stone",
-               "author": "J.K. Rowling",
-               "rating": 4.5
-             },
-             {
-               "id": 3,
-               "title": "To Kill a Mockingbird",
-               "author": "Harper Lee",
-               "rating": 4.8
-             },
-             [...]
+               "name": "Shakespeare, William"
+             }
            ]
+         },
+         {
+           "id": 101,
+           "title": "Effective Java 3rd edition",
+           "authors": [
+             {
+               "name": "Bloch, Joshua"
+             }
+           ]
+         }
+       ]
        ```
     
    - Get Monthly Average Rating
@@ -156,22 +174,20 @@ To get started with the Book Application, follow the steps below:
             
        Example Response:
        ```http        
-            {
-              "bookId": 1,
-              "monthlyAverages": [
+       {
+            "bookId": 4,
+            "yearlyMonthlyAverageRatings": [
                 {
-                  "year": 2023,
-                  "month": 4,
-                  "averageRating": 4.6
-                },
-                {
-                  "year": 2023,
-                  "month": 5,
-                  "averageRating": 4.7
-                },
-                [...]
-              ]
-            }
+                    "year": 2023,
+                    "monthlyAverageRatings": [
+                        {
+                            "month": 5,
+                            "averageRating": 2.5
+                        }
+                    ]
+                }
+            ]
+       }
        ```
          
    - Review a Book
@@ -190,6 +206,6 @@ To get started with the Book Application, follow the steps below:
        {
            "bookId": 1,
            "rating": 5,
-           "comment": "Great book!"
+           "reviewText": "Great book!"
         }
         ```
