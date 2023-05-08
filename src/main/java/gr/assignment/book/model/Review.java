@@ -23,11 +23,13 @@ public class Review {
 
     @Min(value = 0)
     @Max(value = 5)
+    @Column(name = "rating")
     private Integer rating;
 
     @NotBlank
+    @Column(name = "review_text")
     private String reviewText;
 
+    @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
-
 }

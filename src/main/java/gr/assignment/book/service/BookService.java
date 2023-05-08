@@ -39,7 +39,6 @@ public class BookService {
         }
 
         List<ReviewDto> reviews = this.reviewService.findReviewsByBookId(bookId);
-
         double avgRating = reviews.stream()
                 .mapToDouble(ReviewDto::getRating)
                 .average()

@@ -78,7 +78,7 @@ public class GutendexClient {
                 return Collections.emptyList(); // Return an empty list if the response is null or the results are null
             }
         } catch (HttpClientErrorException e) {
-            log.error("Client error received while retrieving all books", e);
+            log.error("Client error received while retrieve all books", e);
             throw new GutendexClientHttpErrorException(e);
         } catch (HttpStatusCodeException e) {
             log.error("Status code error occurred while retrieve all books", e);
