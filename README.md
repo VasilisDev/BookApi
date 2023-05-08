@@ -63,25 +63,22 @@ To get started with the Book Application, follow the steps below:
         
         Example Request:    
         ```http 
-        GET /api/books/search?title=Harry%20Potter&page=1&pageSize=20
+        GET http://localhost:8080/api/books/search?title=Little%20Women;%20Or,%20Meg,%20Jo,%20Beth,%20and%20Amy&page=1&pageSize=2
        ```
        
         Example Response: 
         ```http
         [
-           {
-             "id": 1,
-             "title": "Harry Potter and the Sorcerer's Stone",
-             "author": "J.K. Rowling",
-             "rating": 4.5
-           },
-           {
-             "id": 2,
-             "title": "Harry Potter and the Chamber of Secrets",
-             "author": "J.K. Rowling",
-             "rating": 4.6
-           }
-       ]
+            {
+                "id": 37106,
+                "title": "Little Women; Or, Meg, Jo, Beth, and Amy",
+                "authors": [
+                    {
+                        "name": "Alcott, Louisa May"
+                    }
+                ]
+            }
+        ]
        ```
       
    - Get Book Details
